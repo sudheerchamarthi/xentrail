@@ -7,7 +7,7 @@ app = Flask(__name__)
   
 @app.route('/')
 def myapp():
-
+    #Reurn OS
     return "My OS is " +  str(platform.platform())
     
 if __name__ == "__main__":
