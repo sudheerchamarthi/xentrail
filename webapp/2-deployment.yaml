@@ -23,6 +23,13 @@ spec:
       - image: 664978555709.dkr.ecr.us-east-1.amazonaws.com/xentrail:v1
         name: xentrail-webapp
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         readinessProbe:
           periodSeconds: 1
           httpGet:
