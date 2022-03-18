@@ -66,7 +66,8 @@ jobs:
         run: |
           NAMESPACE=$(cat */*.yaml | grep namespace | cut -d ":" -f2 | head -1)
           kubectl -n ${NAMESPACE} patch deployment ${DEPLOYMENT_NAME} -p  "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
-          sleep 100
+          echo "Waiting for 30 seconds"
+          sleep 30
           for check in {1..10};do 
           ROLLOUT_STATUS=$(kubectl -n ${NAMESPACE} rollout status deployment ${DEPLOYMENT_NAME})
           if [[ "$ROLLOUT_STATUS" == *"successfully"* ]]; then
@@ -74,12 +75,13 @@ jobs:
             break 
           else
             echo "Wait for a minute"
-            sleep 60
+            sleep 30
           fi
           if [ $check -eq 10 ]
           then 
           echo "Roll out failed"
           exit 1
+          fi
           done
   validate:
     name: Validate the application
@@ -88,10 +90,9 @@ jobs:
     steps:
       - name: Check if application is up or not 
         run: | 
-          sleep 100
           NAMESPACE=$(cat */*.yaml | grep namespace | cut -d ":" -f2 | head -1)
           ENDPOINT=$(kubectl -n ${NAMESPACE} get ing | awk {'print $4'} | tail -1 )
-          STATUS_CODE=$(curl --silent  -I k8s-xentrail-xentrail-3ae80c422f-1783290378.us-east-1.elb.amazonaws.com | head -1 | awk {'print $2'})
+          STATUS_CODE=$(curl --silent  -I ${ENDPOINT} | head -1 | awk {'print $2'})
           if [ $STATUS_CODE -ne 200 ]
           then 
           echo "Application is not up"
