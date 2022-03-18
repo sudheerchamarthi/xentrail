@@ -23,3 +23,8 @@ spec:
       - image: 664978555709.dkr.ecr.us-east-1.amazonaws.com/xentrail:v1
         name: xentrail-webapp
         imagePullPolicy: Always
+        readinessProbe:
+          periodSeconds: 1
+          httpGet:
+            path: /
+            port: 80
