@@ -33,11 +33,23 @@ jobs:
 
       - name: Push to ECR 
         run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
-
+    
+  checkvulns:
+    name: Check VUlns 
+    needs: build
+    runs-on: xentrail
+    steps:
+      - name: Check if there are critical vulns in the docker image 
+        run: |
+          IMAGE_DIGEST=$(aws --region ${AWS_REGION} ecr describe-images --repository-name ${ECR_REPO} --image-ids imageTag=${APP_VERSION} --query imageDetails[0].imageDigest)
+          FINDINGS=$(aws --region ${AWS_REGION} ecr describe-image-scan-findings  --repository-name ${ECR_REPO} --image-id imageDigest=${IMAGE_DIGEST})
+          MEDIUM_FINDINGS=$(echo $FINDINGS | jq '.imageScanFindings.findingSeverityCounts.MEDIUM')
+          CRITICAL_FINDINGS=$(echo $FINDINGS | jq '.imageScanFindings.findingSeverityCounts.CRITICAL')
+          if [ -n ${CRITICAL_FINDINGS} ]; then echo "Failing Pipeline as Critical Vulnerabilities found " && exit 1; fi 
 
   deploy:
     name: Deploy to k8s
-    needs: build
+    needs: checkvulns
     runs-on: xentrail
     steps:
       - name: Deploy to K8s  
