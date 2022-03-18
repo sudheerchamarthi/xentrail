@@ -63,6 +63,8 @@ jobs:
     runs-on: xentrail
     steps:
       - name: Trigger rolling update  
-        run: kubectl patch deployment ${DEPLOYMENT_NAME} -p    "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
+        run: |
+          NAMESPACE=$(cat *.yaml | grep namespace | cut -d ":" -f2 | head -1)
+          kubectl -n ${NAMESPACE} patch deployment ${DEPLOYMENT_NAME} -p  "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
 
           
