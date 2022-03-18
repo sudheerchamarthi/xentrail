@@ -33,13 +33,13 @@ jobs:
       - name: Push to ECR 
         run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
 
-  # configure:
-  #   name: Configure the app to Deploy
-  #   needs: build
-  #   runs-on: xentrail
-  #   steps:
-  #     - name: Authenitcate to ECR 
-  #       run: ls
+  configure:
+    name: Configure the app to Deploy
+    needs: build
+    runs-on: xentrail
+    steps:
+      - name: Authenitcate to ECR 
+        run: ls
 
   Deploy:
     name: Deploy to k8s
