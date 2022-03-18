@@ -33,12 +33,6 @@ jobs:
       - name: Push to ECR 
         run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
 
-
-      # Runs a set of commands using the runners shell
-      # - name: Run a multi-line script
-      #   run: |
-      #     sudo docker build -t xentrail:v3 .
-      #     echo test, and deploy your project.
   configure:
     name: Configure the app to Deploy
     needs: build
@@ -46,14 +40,17 @@ jobs:
     steps:
       - name: Authenitcate to ECR 
         run: ls
+
   Deploy:
     name: Deploy to k8s
     needs: configure
     runs-on: xentrail
     steps:
       - name: Authenitcate to cluster  
-        run: aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
+        run: sudo aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
+
       - name: Deploy to DB k8s cluster 
-        run: /home/ubuntu/bin/kubectl apply -f ./webapp
+        run: sudo kubectl apply -f ./mysql
+
       - name: Deploy to webapp k8s cluster 
-        run: /home/ubuntu/bin/kubectl apply -f ./webapp
+        run: sudo kubectl apply -f ./webapp
