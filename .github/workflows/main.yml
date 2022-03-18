@@ -1,11 +1,15 @@
 name: Build and Deploy to k8s
 env:
-  SERVER: production
-
+  ECR_REGISTRY: 664978555709.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REPO: xentrail 
+  APP_VERSION: v3
+  AWS_REGION: us-east-1 
+  
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the v3 branch
   push:
+    name: Build Artifacts
     branches: [ v3 ]
   workflow_dispatch:
 jobs:
@@ -14,19 +18,30 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Run a one-line script
-        run: cat src/app.py
+
+      - name: Authenitcate to ECR 
+        run: aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+ 
+      - name: Build Docker image
+        run: sudo docker build -t ${ECR_REPO}:${APP_VERSION} .
+
+      - name: Tag Image 
+        run: docker tag ${ECR_REPO}:v3 ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
+
+      - name: Push to ECR 
+        run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
+
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          sudo docker build -t xentrail:v3 .
-          echo test, and deploy your project.
-  push:
-    name: Push to ECR 
+      # - name: Run a multi-line script
+      #   run: |
+      #     sudo docker build -t xentrail:v3 .
+      #     echo test, and deploy your project.
+  configure:
+    name: COnfigure the app to Deploy
     needs: build
     runs-on: xentrail
     steps:
-      - name: push to ECR
-        run: echo ${SERVER}
+      - name: Authenitcate to ECR 
+        run: aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin 664978555709.dkr.ecr.us-east-1.amazonaws.com
     
