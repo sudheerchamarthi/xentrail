@@ -53,5 +53,7 @@ jobs:
     steps:
       - name: Authenitcate to cluster  
         run: aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
-      - name: Deploy to k8s cluster 
-        run: kubectl apply -f ./k8s
+      - name: Deploy to DB k8s cluster 
+        run: /home/ubuntu/bin/kubectl apply -f ./webapp
+      - name: Deploy to webapp k8s cluster 
+        run: /home/ubuntu/bin/kubectl apply -f ./webapp
