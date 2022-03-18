@@ -51,6 +51,7 @@ jobs:
     steps:
       - name: Trigger rolling update  
         run: |
+          set -x
           NAMESPACE=$(cat */*.yaml | grep namespace | cut -d ":" -f2 | head -1)
           kubectl -n ${NAMESPACE} patch deployment ${DEPLOYMENT_NAME} -p  "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
           echo "Waiting for 30 seconds"
