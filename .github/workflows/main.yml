@@ -1,0 +1,46 @@
+name: Build and Deploy to k8s
+env:
+  ECR_REGISTRY: 664978555709.dkr.ecr.us-east-1.amazonaws.com
+  ECR_REPO: xentrail 
+  APP_VERSION: v1
+  AWS_REGION: us-east-1 
+  EKS_CLUSTER: xentrail
+  
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the v3 branch
+  push:
+    name: Build Artifacts
+    branches: [ v1 ]
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build artifacts and push to repo 
+    runs-on: xentrail
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Authenitcate to ECR 
+        run: sudo aws ecr get-login-password --region ${AWS_REGION} | sudo docker login --username AWS --password-stdin ${ECR_REGISTRY}
+ 
+      - name: Build Docker image
+        run: sudo docker build -t ${ECR_REPO}:${APP_VERSION} .
+
+      - name: Tag Image 
+        run: sudo docker tag ${ECR_REPO}:v3 ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
+
+      - name: Push to ECR 
+        run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
+
+
+  Deploy:
+    name: Deploy to k8s
+    needs: build
+    runs-on: xentrail
+    steps:
+      - name: Deploy to K8s  
+        run: | 
+          aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
+          kubectl apply -f ./webapp
+          
