@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: xentrail-webapp
-  namespace: xentrail
+  namespace: xentrail-v1
 spec:
   replicas: 3
   selector:
