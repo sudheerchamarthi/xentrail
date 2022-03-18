@@ -14,13 +14,14 @@ on:
   workflow_dispatch:
 jobs:
   build:
+    name: Build artifacts and push to repo 
     runs-on: xentrail
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Authenitcate to ECR 
-        run: aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
+        run: sudo aws ecr get-login-password --region ${AWS_REGION} | sudo docker login --username AWS --password-stdin ${ECR_REGISTRY}
  
       - name: Build Docker image
         run: sudo docker build -t ${ECR_REPO}:${APP_VERSION} .
@@ -43,5 +44,4 @@ jobs:
     runs-on: xentrail
     steps:
       - name: Authenitcate to ECR 
-        run: aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin 664978555709.dkr.ecr.us-east-1.amazonaws.com
-    
+        run: ls
