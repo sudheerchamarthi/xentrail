@@ -46,5 +46,6 @@ jobs:
     # needs: configure
     runs-on: xentrail
     steps:
+      - uses: actions/checkout@v2
       - name: Authenitcate to cluster  
-        run: bash deploy.sh
+        run: bash -x deploy.sh
