@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/')
 def myapp():
     REGION = os.environ.get('AWS_REGION')
-    DYNAMO_TABLE_NAME = os.environ.get(DYNAMO_TABLE_NAME)
+    DYNAMO_TABLE_NAME = os.environ.get('DYNAMO_TABLE_NAME')
     client = boto3.client('dynamodb',region_name=REGION)
     client.put_item(TableName=DYNAMO_TABLE_NAME, Item={"timestamp":{'S':str(round(datetime.datetime.utcnow().timestamp() * 1000))},'logging':{'S':"Yes"} })
     return "Success!. Logged entry in DB with Timestamp"
