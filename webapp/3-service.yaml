@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: xentrail-webapp
+  name: xentrail-webapp-v2
   namespace: xentrail-v2
   labels:
-    app: xentrail-webapp
+    app: xentrail-webapp-v2
 spec:
   selector:
-    app: xentrail-webapp
+    app: xentrail-webapp-v2
   ports:
     - protocol: TCP
       port: 80

@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: xentrail-webapp
+  name: xentrail-webapp-v2
   namespace: xentrail-v2
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: xentrail-webapp
+      app: xentrail-webapp-v2
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -15,11 +15,11 @@ spec:
     type: RollingUpdate
   template:
     metadata:
-      name: xentrail-webapp
+      name: xentrail-webapp-v2
       labels:
-        app: xentrail-webapp
+        app: xentrail-webapp-v2
     spec:
       containers:
       - image: 664978555709.dkr.ecr.us-east-1.amazonaws.com/xentrail:v2
-        name: xentrail-webapp
+        name: xentrail-webapp-v2
         imagePullPolicy: Always

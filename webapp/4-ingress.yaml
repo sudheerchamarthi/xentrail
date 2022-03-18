@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: xentrail-webapp
+  name: xentrail-webapp-v2
   namespace: xentrail-v2
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -15,6 +15,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: xentrail-webapp
+              name: xentrail-webapp-v2
               port:
                 number: 80
