@@ -24,7 +24,7 @@ jobs:
           echo test, and deploy your project.
   push:
     name: Push to ECR 
-    needs: push
+    needs: build
     runs-on: xentrail
     steps:
       - name: push to ECR
