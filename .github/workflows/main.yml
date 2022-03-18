@@ -5,6 +5,7 @@ env:
   APP_VERSION: v3
   AWS_REGION: us-east-1 
   EKS_CLUSTER: xentrail
+  DEPLOYMENT_NAME: xentrail-webapp
   
 # Controls when the workflow will run 
 on:
@@ -34,7 +35,7 @@ jobs:
         run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
 
 
-  Deploy:
+  deploy:
     name: Deploy to k8s
     needs: build
     runs-on: xentrail
@@ -43,4 +44,48 @@ jobs:
         run: | 
           aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
           kubectl apply -f ./webapp
-          
+
+
+  rollingupdate:
+    name: Perform Rolling update
+    needs: deploy
+    runs-on: xentrail
+    steps:
+      - name: Trigger rolling update  
+        run: |
+          NAMESPACE=$(cat */*.yaml | grep namespace | cut -d ":" -f2 | head -1)
+          kubectl -n ${NAMESPACE} patch deployment ${DEPLOYMENT_NAME} -p  "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
+          echo "Waiting for 30 seconds"
+          sleep 30
+          for check in {1..10};do 
+          ROLLOUT_STATUS=$(kubectl -n ${NAMESPACE} rollout status deployment ${DEPLOYMENT_NAME})
+          if [[ "$ROLLOUT_STATUS" == *"successfully"* ]]; then
+            echo "Roll Out succesfull"
+            break 
+          else
+            echo "Wait for a minute"
+            sleep 30
+          fi
+          if [ $check -eq 10 ]
+          then 
+          echo "Roll out failed"
+          exit 1
+          fi
+          done
+  validate:
+    name: Validate the application
+    needs: rollingupdate
+    runs-on: xentrail
+    steps:
+      - name: Check if application is up or not 
+        run: | 
+          NAMESPACE=$(cat */*.yaml | grep namespace | cut -d ":" -f2 | head -1)
+          ENDPOINT=$(kubectl -n ${NAMESPACE} get ing | awk {'print $4'} | tail -1 )
+          STATUS_CODE=$(curl --silent  -I ${ENDPOINT} | head -1 | awk {'print $2'})
+          if [ $STATUS_CODE -ne 200 ]
+          then 
+          echo "Application is not up"
+          exit 1
+          else 
+          echo "Application is up"
+          fi
