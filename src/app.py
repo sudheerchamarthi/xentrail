@@ -3,7 +3,6 @@ import platform
 import datetime
 import os
 from datetime import date
-import mysql.connector
 app = Flask(__name__)
   
 @app.route('/')
