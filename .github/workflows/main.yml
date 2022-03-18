@@ -28,7 +28,7 @@ jobs:
         run: sudo docker build -t ${ECR_REPO}:${APP_VERSION} .
 
       - name: Tag Image 
-        run: sudo docker tag ${ECR_REPO}:v3 ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
+        run: sudo docker tag ${ECR_REPO}:${APP_VERSION} ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
 
       - name: Push to ECR 
         run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
