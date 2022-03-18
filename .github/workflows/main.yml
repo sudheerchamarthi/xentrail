@@ -97,5 +97,7 @@ jobs:
           then 
           echo "Application is not up"
           exit 1
+          else 
+          echo "Application is up"
           fi
           
