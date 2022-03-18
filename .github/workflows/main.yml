@@ -45,7 +45,7 @@ jobs:
           FINDINGS=$(aws --region ${AWS_REGION} ecr describe-image-scan-findings  --repository-name ${ECR_REPO} --image-id imageDigest=${IMAGE_DIGEST})
           MEDIUM_FINDINGS=$(echo $FINDINGS | jq '.imageScanFindings.findingSeverityCounts.MEDIUM')
           CRITICAL_FINDINGS=$(echo $FINDINGS | jq '.imageScanFindings.findingSeverityCounts.CRITICAL')
-          if [ -n ${CRITICAL_FINDINGS} ]; then echo "Failing Pipeline as Critical Vulnerabilities found " && exit 1; fi 
+          if [ -n ${CRITICAL_FINDINGS} ]; then echo "No Critical Vulns found. Medium Vulns: ${MEDIUM_FINDINGS}" ;else echo "Failing Pipeline as Critical Vulnerabilities found " && exit 1; fi 
 
   deploy:
     name: Deploy to k8s
