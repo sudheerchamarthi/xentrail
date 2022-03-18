@@ -1,4 +1,6 @@
 name: Build and Deploy to k8s
+env:
+  SERVER: production
 
 # Controls when the workflow will run
 on:
@@ -24,5 +26,5 @@ jobs:
     runs-on: xentrail
     steps:
       - name: push to ECR
-        run: echo "Push to ECR"
+        run: echo ${SERVER}
     
