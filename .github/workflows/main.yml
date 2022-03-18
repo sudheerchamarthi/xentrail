@@ -11,7 +11,7 @@ jobs:
     runs-on: xentrail
 
     steps:
-      - uses: actions/checkout@2
+      - uses: actions/checkout@v2
       - name: Run a one-line script
         run: cat src/app.py
 
