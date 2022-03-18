@@ -5,6 +5,7 @@ env:
   APP_VERSION: v1
   AWS_REGION: us-east-1 
   EKS_CLUSTER: xentrail
+  DEPLOYMENT_NAME: xentrail-webapp
   
 # Controls when the workflow will run
 on:
@@ -34,7 +35,7 @@ jobs:
         run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
 
 
-  Deploy:
+  deploy:
     name: Deploy to k8s
     needs: build
     runs-on: xentrail
@@ -43,4 +44,13 @@ jobs:
         run: | 
           aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
           kubectl apply -f ./webapp
+
+  rollingupdate:
+    name: Perform Rolling update
+    needs: deploy
+    runs-on: xentrail
+    steps:
+      - name: Trigger rolling update  
+        run: kubectl patch deployment ${DEPLOYMENT_NAME} -p    "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
+
           
