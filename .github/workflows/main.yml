@@ -64,7 +64,7 @@ jobs:
     steps:
       - name: Trigger rolling update  
         run: |
-          NAMESPACE=$(cat *.yaml | grep namespace | cut -d ":" -f2 | head -1)
+          NAMESPACE=$(cat */*.yaml | grep namespace | cut -d ":" -f2 | head -1)
           kubectl -n ${NAMESPACE} patch deployment ${DEPLOYMENT_NAME} -p  "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"date\":\"`date +'%s'`\"}}}}}"
 
           
