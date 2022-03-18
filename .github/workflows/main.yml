@@ -23,6 +23,8 @@ jobs:
           sudo docker build -t xentrail:v3 .
           echo test, and deploy your project.
   push:
+    name: Push to ECR 
+    needs: push
     runs-on: xentrail
     steps:
       - name: push to ECR
