@@ -5,7 +5,7 @@ env:
   APP_VERSION: v2
   AWS_REGION: us-east-1 
   EKS_CLUSTER: xentrail
-  DEPLOYMENT_NAME: xentrail-webapp
+  DEPLOYMENT_NAME: xentrail-webapp-v2
   
 # Controls when the workflow will run
 on:
