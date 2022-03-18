@@ -4,6 +4,7 @@ env:
   ECR_REPO: xentrail 
   APP_VERSION: v3
   AWS_REGION: us-east-1 
+  EKS_CLUSTER: xentrail
   
 # Controls when the workflow will run
 on:
@@ -50,5 +51,7 @@ jobs:
     needs: configure
     runs-on: xentrail
     steps:
-      - name: Deploy 
-        run: ls
+      - name: Authenitcate to cluster  
+        run: aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
+      - name: Deploy to k8s cluster 
+        run: kubectl apply -f ./k8s

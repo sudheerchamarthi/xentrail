@@ -10,7 +10,7 @@ app = Flask(__name__)
 def myapp():
     START_DATE = os.environ.get('START_DATE')
     CANDIDATE_NBAME = os.environ.get('CANDIDATE_NBAME')
-    HOST = "172.17.0.3"
+    HOST = "mysql"
     DBUSERNAME = "root"
     DBPASSWORD = "Secret@123"
     DBNAME = "appaudit"
