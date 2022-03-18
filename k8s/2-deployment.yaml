@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: xentrail-webapp
+  namespace: xentrail
 spec:
   replicas: 3
   selector:
@@ -19,5 +20,5 @@ spec:
         app: xentrail-webapp
     spec:
       containers:
-      - image: httpd
+      - image: 664978555709.dkr.ecr.us-east-1.amazonaws.com/xentrail:v3 
         name: xentrail-webapp

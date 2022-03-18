@@ -39,9 +39,16 @@ jobs:
       #     sudo docker build -t xentrail:v3 .
       #     echo test, and deploy your project.
   configure:
-    name: COnfigure the app to Deploy
+    name: Configure the app to Deploy
     needs: build
     runs-on: xentrail
     steps:
       - name: Authenitcate to ECR 
+        run: ls
+  Deploy:
+    name: Deploy to k8s
+    needs: configure
+    runs-on: xentrail
+    steps:
+      - name: Deploy 
         run: ls
