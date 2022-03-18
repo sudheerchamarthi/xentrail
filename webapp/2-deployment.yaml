@@ -22,3 +22,4 @@ spec:
       containers:
       - image: 664978555709.dkr.ecr.us-east-1.amazonaws.com/xentrail:v3 
         name: xentrail-webapp
+        imagePullPolicy: Always

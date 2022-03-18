@@ -5,7 +5,6 @@ env:
   APP_VERSION: v3
   AWS_REGION: us-east-1 
   EKS_CLUSTER: xentrail
-  SSM_MYSQL_SECRET: MYSQL_ROOT_PASSWORD
   
 # Controls when the workflow will run
 on:
@@ -34,20 +33,12 @@ jobs:
       - name: Push to ECR 
         run: sudo docker push ${ECR_REGISTRY}/${ECR_REPO}:${APP_VERSION}
 
-  configure:
-    name: Configure the app to Deploy
-    needs: build
-    runs-on: xentrail
-    steps:
-      - name: Add MySQL Secret 
-        run: ls
 
   Deploy:
     name: Deploy to k8s
-    needs: configure
+    needs: build
     runs-on: xentrail
     steps:
-      - uses: actions/checkout@v2
       - name: Deploy to K8s  
         run: | 
           aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
