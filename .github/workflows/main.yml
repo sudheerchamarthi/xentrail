@@ -6,7 +6,7 @@ env:
   AWS_REGION: us-east-1 
   EKS_CLUSTER: xentrail
   
-# Controls when the workflow will run
+# Controls when the workflow will run 
 on:
   # Triggers the workflow on push or pull request events but only for the v3 branch
   push:
