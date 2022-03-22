@@ -7,7 +7,7 @@ env:
   EKS_CLUSTER: xentrail
   DEPLOYMENT_NAME: xentrail-webapp
   
-# Controls when the workflow will run
+# Controls when the workflow will run 
 on:
   # Triggers the workflow on push or pull request events but only for the v3 branch
   push:
