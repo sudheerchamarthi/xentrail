@@ -3,6 +3,7 @@ kind: HorizontalPodAutoscaler
 metadata:
   creationTimestamp: null
   name: xentrail-webapp
+  namespace: xentrail-v1
 spec:
   maxReplicas: 10
   minReplicas: 1
